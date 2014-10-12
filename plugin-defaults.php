@@ -1,0 +1,16 @@
+<?php return array
+	(
+
+	# Hidden fields
+
+		'settings_saved_once' => '0',
+
+	# "Post Types" fields
+	'enable_demo_xml_gallery' => true,
+
+		'demo_xml_single_item_label' => __('Proof Gallery', 'demo_xml_txtd'),
+		'demo_xml_multiple_items_label' => __('Proof Galleries', 'demo_xml_txtd'),
+		'demo_xml_change_single_item_slug' => false,
+		'demo_xml_gallery_new_single_item_slug' => 'demo_xml_gallery'
+
+	); # config

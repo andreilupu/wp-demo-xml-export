@@ -1,0 +1,302 @@
+@charset "UTF-8";
+@import "compass";
+
+/*------------------------------------*\
+    $SETUP
+\*------------------------------------*/
+@import "vars";
+
+
+.demo_xml-data{
+	position: relative;
+
+	margin-bottom: $_u;
+}
+
+	.meta-box__title{
+		display: block;
+		font-weight: bold;
+	}
+
+	@media screen and (min-width: 899px){
+		.button-download{
+			position: absolute;
+			right: 0;
+		}
+	}
+
+
+
+.proof-photo{
+    padding-bottom: 0;
+    @include transition (all .3s cubic-bezier(0.86, 0, 0.07, 1));
+
+	&:hover{
+		background: #EEE9E9;
+
+	    .proof-photo__meta{
+	        @include opacity(1);
+	        background: rgba(0, 0, 0, 0.5);
+	    }
+
+	    .separator {
+	        max-width:80%;
+	        margin-top:$_u2;
+	        margin-bottom:$_u2;
+	    }
+	}
+
+	&.selected {
+		.proof-photo__status {
+			opacity:1;
+
+			span.ticker {
+				opacity:1;
+			}
+		}
+	}
+
+	&.selecting {
+		.proof-photo__status {
+			span.ticker {
+				opacity:0;
+			}
+			span.spinner {
+				opacity:1;
+			}
+		}
+	}
+
+	&.scrooled_from_comments{
+		@include scale(1.2);
+		z-index: 50;
+	}
+
+	a{
+		color: white;
+	}
+
+	.actions-nav{
+		text-align: center;
+		margin: $_u2 0;
+		padding: 0;
+	}
+}
+
+	.proof-photo__container{
+		position: relative;
+	}
+
+	.proof-photo__meta{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		@include opacity(0);
+		@include transition(all .2s linear);
+
+		.flexbox{
+			height: 100%;
+		}
+
+        .separator {
+            max-width: 0;
+            margin: 0 auto;
+            height: 1px;
+
+			background: white;
+
+            @include transition(all 0.1s linear);
+        }
+	}
+.proof-photo__status {
+	@include transition(all .2s linear);
+
+	span.ticker {
+		display:block;
+
+		font-size: 18px;
+		color: white;
+
+		line-height: 32px; // Bottom bar height
+		width:32px;
+		text-align: center;
+
+		opacity:0;
+
+		@include transition(all .2s linear);
+	}
+
+	span.spinner {
+		position:absolute;
+		right:0;
+		bottom:0;
+
+		border:3px solid transparent;
+		border-radius:100%;
+
+		opacity:0;
+
+		@extend %spinner;
+
+		@include transition(all .2s linear);
+	}
+
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+
+	// width: 2em;
+	// height: 2em;
+
+	opacity:0;
+}
+
+.proof-photo__id{
+	display: block;
+	padding: $_u4 0;
+
+	text-align: center;
+}
+
+.meta__action {
+	margin: 0;
+	color: black;
+	text-decoration: none !important;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.meta__action--popup{
+	color: white;
+}
+
+.demo_xml_photo_ref{
+	padding: 3px 6px;
+	margin: 0 3px;
+
+	color: white;
+	background: black;
+	cursor: pointer;
+}
+
+
+
+
+
+// Magnific Popup
+
+.mfp-arrow{
+	position: absolute;
+	top: 50%;
+
+	display: block;
+
+	outline: none;
+	@include transform(translateY(-50%));
+
+	&:hover, &:active, &:focus{
+		background-color: transparent;
+	}
+
+	&:before, &:after{
+		font-size: 7em;
+	}
+}
+
+.mfp-close{
+	outline: none;
+	padding: 0 $_u;
+
+	&:hover, &:active, &:focus{
+		background-color: transparent;
+	}
+}
+
+.mfp-arrow-left{
+	left: 2%;
+
+	width: 0;
+	height: 0;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+
+	border-right: 30px solid white;
+}
+
+
+.mfp-arrow-right{
+	right: 2%;
+
+	width: 0;
+	height: 0;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+
+	border-left: 30px solid white;
+}
+
+.mfp-counter{
+	font-size: 1em;
+	color: white;
+}
+
+div.mfp-bottom-bar{
+
+	margin-top: -50px;
+
+	.mfp-title{
+		margin-top: 10px;
+	}
+}
+
+img.mfp-img{
+	padding: 80px 0;
+}
+
+div.mfp-figure:after{
+	content: none;
+}
+
+/*
+ * Spinner
+ */
+%spinner {
+	height:20px;
+	width:20px;
+	margin:0 6px 6px 0;
+
+	border-left:3px solid rgba(255,255,255,.15);
+	border-right:3px solid rgba(255,255,255,.15);
+	border-bottom:3px solid rgba(255,255,255,.15);
+	border-top:3px solid rgba(255,255,255,.8);
+	border-radius:100%;
+
+	-webkit-animation: rotation .6s infinite linear;
+	-moz-animation: rotation .6s infinite linear;
+	-o-animation: rotation .6s infinite linear;
+	animation: rotation .6s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(359deg);}
+}
+
+@-moz-keyframes rotation {
+	from {-moz-transform: rotate(0deg);}
+	to {-moz-transform: rotate(359deg);}
+}
+
+@-o-keyframes rotation {
+	from {-o-transform: rotate(0deg);}
+	to {-o-transform: rotate(359deg);}
+}
+
+@keyframes rotation {
+from {transform: rotate(0deg);}
+to {transform: rotate(359deg);}
+}
