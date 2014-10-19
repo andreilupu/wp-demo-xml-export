@@ -105,6 +105,11 @@ class DemoXmlPlugin {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 99999999999 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
+		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
+		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
+
+		add_action( 'after_setup_theme', array( $this, 'call_demo_export' ) );
+
 		/**
 		 * Ajax Callbacks
 		 */
@@ -112,6 +117,24 @@ class DemoXmlPlugin {
 //		add_action('wp_ajax_nopriv_demo_xml_image_click', array(&$this, 'ajax_click_on_photo'));
 	}
 
+	function call_demo_export(){
+		if ( !isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'demo_xml') {
+			return;
+		}
+
+		DemoXmlPlugin::demo_export(
+			array(
+				'replacers' => array( '278', '279', '280', '281' ),
+				'ignored_by_replace' => array( '53' ),
+				'featured_image_replacers' => array( '278' ),
+				'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
+				'replace_in_metadata' => array(
+					'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
+					'by_url' => '' // meta keys which where urls should be replaced
+				)
+			)
+		);
+	}
 	/**
 	 * Return an instance of this class.
 	 *
@@ -292,8 +315,6 @@ class DemoXmlPlugin {
 
 	/**===== Exporter methods ======= */
 
-
-
 	/**
 	 * Generates the WXR export file for download
 	 *
@@ -358,8 +379,8 @@ class DemoXmlPlugin {
 		//$post_ids = array_merge($post_ids, $ignore);
 		//$post_ids = array_merge($post_ids, $replacers);
 
-		//self::display_header( $post_ids );
-		//self::display_terms( $args );
+		self::display_header( $post_ids, $filename );
+		self::display_terms( $args );
 
 		// first lets import replacers
 		self::display_posts( $replacers );
@@ -370,20 +391,19 @@ class DemoXmlPlugin {
 		if ( !empty( $featured_image_replacer ) ) {
 			self::display_posts($featured_image_replacer);
 			self::$featured_image_replacer = $featured_image_replacer;
-
 		}
 
 		self::display_posts( $post_ids, $replacers, $ignore );
 
-		//self::display_footer();
+		self::display_footer();
 	}
 
-	static function display_header( $post_ids ){
+	static function display_header( $post_ids, $filename ){
 		global $post;
 
-//		header( 'Content-Description: File Transfer' );
-//		header( 'Content-Disposition: attachment; filename=' . $filename );
-//		header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true );
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+		header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true );
 
 		add_filter( 'wxr_export_skip_postmeta', array('DemoXmlPlugin', 'wxr_filter_postmeta'), 10, 2 );
 
@@ -624,11 +644,10 @@ class DemoXmlPlugin {
 					</item>
 					<?php
 					array_push( self::$imported_posts, $post->ID );
-					var_dump( ob_get_clean() );
+					echo ( ob_get_clean() );
 				}
 			}
 		}
-
 	}
 
 	static function display_footer() { ?>
@@ -644,6 +663,40 @@ class DemoXmlPlugin {
 		return $value;
 	}
 
+	function replace_the_content_urls( $content ) {
+		$reg_exUrl = "#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#i";
+		$content = preg_replace_callback($reg_exUrl, function($matches){
+
+			if ( strpos($matches[0], 'wp-content/uploads' ) > 0 ) {
+				$matches[0] = '#########';
+			}
+
+			return $matches[0];
+		}, $content);
+
+		return $content;
+	}
+
+	function replace_gallery_shortcodes_ids ( $content ) {
+
+		// pregmatch only ids attribute
+		$pattern = '((\[gallery.*])?ids=\"(.*)\")';
+
+		$content = preg_replace_callback($pattern, function($matches){
+
+			if ( isset( $matches[2] ) && !empty( $matches[2] ) ) {
+
+				$replace_ids = array();
+				$matches[2] = explode(',' , $matches[2]);
+				foreach( $matches[2] as $key => $match ) {
+					$replace_ids[$key] = 22222222;
+				}
+			}
+			$replace_ids = ' ids="'. implode(',', $replace_ids ) . '"';
+			return $replace_ids;
+		}, $content);
+		return $content;
+	}
 	/**
 	 * Wrap given string in XML CDATA tag.
 	 *

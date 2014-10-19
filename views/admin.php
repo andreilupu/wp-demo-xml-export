@@ -47,18 +47,18 @@
 //		echo $f->field('general')->render();
 //		echo $f->field('post_types')->render();
 
-		DemoXmlPlugin::demo_export(
-			array(
-				'replacers' => array( '278', '279', '280', '281' ),
-				'ignored_by_replace' => array( '53' ),
-				'featured_image_replacers' => array( '278' ),
-				'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
-				'replace_in_metadata' => array(
-					'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
-					'by_url' => '' // meta keys which where urls should be replaced
-				)
-			)
-		); ?>
+//		DemoXmlPlugin::demo_export(
+//			array(
+//				'replacers' => array( '278', '279', '280', '281' ),
+//				'ignored_by_replace' => array( '53' ),
+//				'featured_image_replacers' => array( '278' ),
+//				'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
+//				'replace_in_metadata' => array(
+//					'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
+//					'by_url' => '' // meta keys which where urls should be replaced
+//				)
+//			)
+//		); ?>
 
 			<button type="submit" class="button button-primary">
 				<?php _e('Save Changes', 'demo_xml_txtd'); ?>
