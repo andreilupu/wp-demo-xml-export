@@ -113,6 +113,7 @@ class DemoXmlPlugin {
 		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
+		add_filter('wxr_export_post_meta_value', array( $this, 'my_custom_post_meta_filter'), 10, 2);
 
 		// add this action the the latest hook possible so we catch all post_types
 		// but do not place this after the output started because it's modifing the header
@@ -1033,7 +1034,7 @@ class DemoXmlPlugin {
 							if ( apply_filters( 'wxr_export_skip_postmeta', false, $meta->meta_key, $meta ) )
 								continue;
 
-							$meta->meta_value = apply_filters( 'wxr_export_post_meta', $meta->meta_key, $meta ); ?>
+							$meta->meta_value = apply_filters( 'wxr_export_post_meta_value', $meta->meta_key, $meta->meta_value ); ?>
 							<wp:postmeta>
 								<wp:meta_key><?php echo $meta->meta_key; ?></wp:meta_key>
 								<wp:meta_value><?php echo self::wxr_cdata( $meta->meta_value ); ?></wp:meta_value>
@@ -1147,6 +1148,37 @@ class DemoXmlPlugin {
 
 			return ' ids="'. $replace_string . '"';
 		}
+	}
+
+	function my_custom_post_meta_filter( $meta_key, $meta_value ) {
+
+		if ( $meta_key === '_pile_second_image') {
+			//ceva
+			$dumpo = 'caasdas';
+		}
+		/**
+		 * Some checks
+		 */
+		if ( !empty($meta_value) && isset( $this->config['replacers']['replace_in_metadata']['by_id'] ) && !empty( $this->config['replacers']['replace_in_metadata']['by_id'] ) && in_array($meta_key, $this->config['replacers']['replace_in_metadata']['by_id'] ) ){
+
+			// I know for sure this meta_value has an id or ids separated with commas
+			$ids = explode(',', $meta_value);
+
+			// cache replacers
+			$replacers = self::$attachment_replacers;
+			$new_meta = array();
+			foreach ($ids as $key => $id ) {
+				// always get the first id, and after that shift the array
+				$new_meta[$key] = $replacers[0];
+				$replacers = self::rotate_array( $replacers );
+			}
+
+			$return_string = implode(',', $new_meta);
+
+			return $return_string;
+		}
+
+		return $meta_value;
 	}
 
 	/**

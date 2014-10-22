@@ -102,7 +102,7 @@ return array
 			'featured_image_replacers' => array( '278' ),
 			'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
 			'replace_in_metadata' => array(
-				'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
+				'by_id' => array('_pile_second_image'), // meta keys which should have replaced their values with attachments ids
 				'by_url' => '' // meta keys which where urls should be replaced
 			)
 		)
