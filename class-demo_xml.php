@@ -114,8 +114,9 @@ class DemoXmlPlugin {
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
 
-		// add this action the the latest hook posible so we catch all posttypes
-		add_action( 'admin_footer', array( $this, 'call_demo_export' ) );
+		// add this action the the latest hook possible so we catch all post_types
+		// but do not place this after the output started because it's modifing the header
+		add_action( 'admin_init', array( $this, 'call_demo_export' ) );
 
 		/**
 		 * Ajax Callbacks
@@ -1031,7 +1032,8 @@ class DemoXmlPlugin {
 							 */
 							if ( apply_filters( 'wxr_export_skip_postmeta', false, $meta->meta_key, $meta ) )
 								continue;
-							?>
+
+							$meta->meta_value = apply_filters( 'wxr_export_post_meta', $meta->meta_key, $meta ); ?>
 							<wp:postmeta>
 								<wp:meta_key><?php echo $meta->meta_key; ?></wp:meta_key>
 								<wp:meta_value><?php echo self::wxr_cdata( $meta->meta_value ); ?></wp:meta_value>
