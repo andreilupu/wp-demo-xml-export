@@ -113,7 +113,9 @@ class DemoXmlPlugin {
 		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
-		add_action( 'after_setup_theme', array( $this, 'call_demo_export' ) );
+
+		// add this action the the latest hook posible so we catch all posttypes
+		add_action( 'admin_footer', array( $this, 'call_demo_export' ) );
 
 		/**
 		 * Ajax Callbacks
