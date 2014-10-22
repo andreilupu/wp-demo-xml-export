@@ -127,18 +127,11 @@ class DemoXmlPlugin {
 			return;
 		}
 
-		DemoXmlPlugin::demo_export(
-			array(
-				'replacers' => array( '278', '279', '280', '281' ),
-				'ignored_by_replace' => array( '53' ),
-				'featured_image_replacers' => array( '278' ),
-				'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
-				'replace_in_metadata' => array(
-					'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
-					'by_url' => '' // meta keys which where urls should be replaced
-				)
-			)
-		);
+		if ( isset( $this->config['replacers'] ) ) {
+			DemoXmlPlugin::demo_export( $this->config['replacers'] );
+			die();
+		}
+
 	}
 	/**
 	 * Return an instance of this class.
@@ -1107,20 +1100,22 @@ class DemoXmlPlugin {
 
 	function replace_the_content_urls( $content ) {
 		$reg_exUrl = "#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#i";
-		$content = preg_replace_callback($reg_exUrl, function($matches){
-
-			$attach_id = DemoXmlPlugin::$attachment_replacers[0];
-			$src = wp_get_attachment_image_src( $attach_id, 'full' );
-			if ( strpos($matches[0], 'wp-content/uploads' ) > 0 ) {
-				$matches[0] = $src[0];
-			}
-
-			DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
-
-			return $matches[0];
-		}, $content);
+		$content = preg_replace_callback($reg_exUrl, array($this, 'replace_the_content_urls_pregmatch_callback'), $content);
 
 		return $content;
+	}
+
+	function replace_the_content_urls_pregmatch_callback ($matches){
+
+		$attach_id = DemoXmlPlugin::$attachment_replacers[0];
+		$src = wp_get_attachment_image_src( $attach_id, 'full' );
+		if ( strpos($matches[0], 'wp-content/uploads' ) > 0 ) {
+			$matches[0] = $src[0];
+		}
+
+		DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
+
+		return $matches[0];
 	}
 
 	function replace_gallery_shortcodes_ids ( $content ) {

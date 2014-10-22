@@ -96,4 +96,15 @@ return array
 		// shows exception traces on error
 		'debug' => $debug,
 
+		'replacers' => array(
+			'replacers' => array( '278', '279', '280', '281' ),
+			'ignored_by_replace' => array( '53' ),
+			'featured_image_replacers' => array( '278' ),
+			'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
+			'replace_in_metadata' => array(
+				'by_id' => array(''), // meta keys which should have replaced their values with attachments ids
+				'by_url' => '' // meta keys which where urls should be replaced
+			)
+		)
+
 	); # config
