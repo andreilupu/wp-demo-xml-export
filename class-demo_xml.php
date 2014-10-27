@@ -140,6 +140,10 @@ class DemoXmlPlugin {
 			$this->config['replace_args']['ignored_by_replace'] = explode( ',', $settings['demo_xml_ignores'] );
 		}
 
+		if ( isset( $settings['demo_xml_featured_images'] ) && !empty( $settings['demo_xml_featured_images'] ) ) {
+			$this->config['replace_args']['featured_image_replacers'] = explode( ',', $settings['demo_xml_featured_images'] );
+		}
+
 		if ( isset( $this->config['replace_args'] ) ) {
 			DemoXmlPlugin::demo_export( $this->config['replace_args'] );
 			die();
