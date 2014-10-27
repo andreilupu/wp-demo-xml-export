@@ -43,9 +43,23 @@
 		<?php endif; ?>
 
 		<?php echo $f = demo_xml::form($config, $processor);
-//		echo $f->field('hiddens')->render();
-//		echo $f->field('general')->render();
-//		echo $f->field('post_types')->render();
+
+		wp_enqueue_media(); ?>
+
+		<button type="submit" name="export_xml_submit" class="button button-primary">
+			<?php _e('Exportå', 'demo_xml_txtd'); ?>
+		</button>
+
+		<button type="submit" class="button button-primary">
+			<?php _e('Save Changes', 'demo_xml_txtd'); ?>
+		</button>
+
+		<?php
+
+		echo $f->field('hiddens')->render();
+		echo $f->field('replacers')->render();
+		echo $f->field('ignores')->render();
+		echo $f->field('featured_images')->render();
 
 //		DemoXmlPlugin::demo_export(
 //			array(
@@ -60,9 +74,7 @@
 //			)
 //		); ?>
 
-			<button type="submit" class="button button-primary">
-				<?php _e('Save Changes', 'demo_xml_txtd'); ?>
-			</button>
+
 
 		<?php echo $f->endform() ?>
 

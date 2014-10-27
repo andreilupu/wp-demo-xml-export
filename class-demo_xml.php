@@ -65,8 +65,6 @@ class DemoXmlPlugin {
 
 	public $display_admin_menu = false;
 
-	protected $github_updater;
-
 	protected $config;
 
 	protected static $number_of_images;
@@ -124,15 +122,26 @@ class DemoXmlPlugin {
 		 */
 //		add_action('wp_ajax_demo_xml_image_click', array(&$this, 'ajax_click_on_photo'));
 //		add_action('wp_ajax_nopriv_demo_xml_image_click', array(&$this, 'ajax_click_on_photo'));
+		add_action('wp_ajax_pix_core_gallery_preview', array(&$this, 'ajax_pix_core_gallery_preview'));
 	}
 
 	function call_demo_export(){
-		if ( !isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'demo_xml') {
+		if ( !isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'demo_xml' || !isset( $_POST['export_xml_submit'] )  ) {
 			return;
 		}
 
-		if ( isset( $this->config['replacers'] ) ) {
-			DemoXmlPlugin::demo_export( $this->config['replacers'] );
+		$settings = get_option('demo_xml_settings');
+
+		if ( isset( $settings['demo_xml_replacers'] ) && !empty( $settings['demo_xml_replacers'] ) ) {
+			$this->config['replace_args']['replacers'] = explode( ',', $settings['demo_xml_replacers'] );
+		}
+
+		if ( isset( $settings['demo_xml_ignores'] ) && !empty( $settings['demo_xml_ignores'] ) ) {
+			$this->config['replace_args']['ignored_by_replace'] = explode( ',', $settings['demo_xml_ignores'] );
+		}
+
+		if ( isset( $this->config['replace_args'] ) ) {
+			DemoXmlPlugin::demo_export( $this->config['replace_args'] );
 			die();
 		}
 
@@ -199,17 +208,30 @@ class DemoXmlPlugin {
 		load_plugin_textdomain( $domain, FALSE, basename( dirname( __FILE__ ) ) . '/lang/' );
 	}
 
-	/**
-	 * Ensure github updates
-	 * Define an update branch and config it here
-	 */
-	public function github_plugin_updater_init() {
-		include_once 'updater.php';
-//		define( 'WP_GITHUB_FORCE_UPDATE', true ); // this is only for testing
-		if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
-			$git_config = $this->config['github_updater'];
-			$this->github_updater = new WP_DemoXml_GitHub_Updater( $git_config );
+
+	// create an ajax call which will return a preview to the current gallery
+	function ajax_pix_core_gallery_preview(){
+		$result = array('success' => false, 'output' => '');
+
+		if (isset($_REQUEST['attachments_ids'])) {
+			$ids = $_REQUEST['attachments_ids'];
 		}
+		if ( empty($ids) ) {
+			echo json_encode( $result );
+			exit;
+		}
+
+		$ids = explode( ',', $ids );
+
+		foreach ( $ids as $id ) {
+			$attach = wp_get_attachment_image_src( $id, 'thumbnail', false);
+
+			$result["output"] .= '<li><img src="'.$attach[0] .'" /></li>';
+
+		}
+		$result["success"] = true;
+		echo json_encode( $result );
+		exit;
 	}
 
 	/**

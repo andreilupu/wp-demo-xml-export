@@ -35,10 +35,12 @@ return array
 					=> include 'settings/hiddens'.EXT,
 //				'general'
 //					=> include 'settings/general'.EXT,
-				'post_types'
-					=> include 'settings/post_types'.EXT,
-//				'taxonomies'
-//					=> include 'settings/taxonomies'.EXT,
+				'replacers'
+					=> include 'settings/replacers'.EXT,
+				'ignores'
+					=> include 'settings/ignores'.EXT,
+				'featured_images'
+					=> include 'settings/featured_images'.EXT,
 			),
 
 		'processor' => array
@@ -96,10 +98,10 @@ return array
 		// shows exception traces on error
 		'debug' => $debug,
 
-		'replacers' => array(
-			'replacers' => array( '278', '279', '280', '281' ),
-			'ignored_by_replace' => array( '53' ),
-			'featured_image_replacers' => array( '278' ),
+		'replace_args' => array(
+			'replacers' => array(),
+			'ignored_by_replace' => array(),
+			'featured_image_replacers' => array(),
 			'replace_in_contents' => array('any'), // custom post types in which the content should have replaced urls
 			'replace_in_metadata' => array(
 				'by_id' => array('_pile_second_image'), // meta keys which should have replaced their values with attachments ids
