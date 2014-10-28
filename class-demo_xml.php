@@ -89,6 +89,7 @@ class DemoXmlPlugin {
 
 		$this->plugin_basepath = plugin_dir_path( __FILE__ );
 		$this->config = self::config();
+		self::$wxr_version = 1.2;
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'admin_init', array( $this, 'wpgrade_init_plugin' ) );
@@ -1178,14 +1179,10 @@ class DemoXmlPlugin {
 
 	function my_custom_post_meta_filter( $meta_key, $meta_value ) {
 
-		if ( $meta_key === '_pile_second_image') {
-			//ceva
-			$dumpo = 'caasdas';
-		}
 		/**
 		 * Some checks
 		 */
-		if ( !empty($meta_value) && isset( $this->config['replacers']['replace_in_metadata']['by_id'] ) && !empty( $this->config['replacers']['replace_in_metadata']['by_id'] ) && in_array($meta_key, $this->config['replacers']['replace_in_metadata']['by_id'] ) ){
+		if ( !empty($meta_value) && isset( $this->config['replace_args']['replace_in_metadata']['by_id'] ) && !empty( $this->config['replace_args']['replace_in_metadata']['by_id'] ) && in_array($meta_key, $this->config['replace_args']['replace_in_metadata']['by_id'] ) ){
 
 			// I know for sure this meta_value has an id or ids separated with commas
 			$ids = explode(',', $meta_value);

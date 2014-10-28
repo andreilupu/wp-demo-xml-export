@@ -9,12 +9,6 @@ if ( isset( $_GET['debug'] ) && $_GET['debug'] == 'true' ) {
 $debug = true;
 $options = get_option('demo_xml_settings');
 
-$display_settings = false;
-
-if ( isset( $options['display_settings'] ) ){
-	$display_settings = $options['display_settings'];
-}
-
 return array
 	(
 		'plugin-name' => 'demo_xml',
@@ -33,8 +27,6 @@ return array
 			(
 				'hiddens'
 					=> include 'settings/hiddens'.EXT,
-//				'general'
-//					=> include 'settings/general'.EXT,
 				'replacers'
 					=> include 'settings/replacers'.EXT,
 				'ignores'
@@ -46,7 +38,6 @@ return array
 		'processor' => array
 			(
 				// callback signature: (array $input, PixtypesProcessor $processor)
-
 				'preupdate' => array
 				(
 					// callbacks to run before update process
@@ -77,23 +68,6 @@ return array
 			(
 				'save_settings' => 'save_proof_settings'
 			),
-
-//		'display_settings' => $display_settings,
-
-//		'github_updater' => array(
-//			'slug' => basename(dirname(__FILE__)).'/demo_xml.php',
-//			'api_url' => 'https://api.github.com/repos/pixelgrade/demo_xml',
-//			'raw_url' => 'https://raw.github.com/pixelgrade/demo_xml/update',
-//			'github_url' => 'https://github.com/pixelgrade/demo_xml/tree/update',
-//			'zip_url' => 'https://github.com/pixelgrade/demo_xml/archive/update.zip',
-//			'sslverify' => false,
-//			'requires' => '3.0',
-//			'tested' => '3.3',
-//			'readme' => 'README.md',
-//			'textdomain' => 'demo_xml',
-//			'debug_mode' => $debug
-//			//'access_token' => '',
-//		),
 
 		// shows exception traces on error
 		'debug' => $debug,

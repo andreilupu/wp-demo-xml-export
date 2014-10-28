@@ -27,6 +27,7 @@ function pix_builder_filter_try( $meta_key, $meta_value ) {
 
 					if ( $block->type === 'editor' ) {
 						$block->content = wp_slash($block->content);
+						var_dump($block->content);
 					}
 				}
 
