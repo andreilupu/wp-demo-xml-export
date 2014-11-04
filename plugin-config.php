@@ -33,6 +33,10 @@ return array
 					=> include 'settings/ignores'.EXT,
 				'featured_images'
 					=> include 'settings/featured_images'.EXT,
+				'metakeys_ids'
+				=> include 'settings/metakeys_ids'.EXT,
+				'metakeys_urls'
+				=> include 'settings/metakeys_urls'.EXT,
 			),
 
 		'processor' => array

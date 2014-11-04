@@ -145,6 +145,14 @@ class DemoXmlPlugin {
 			$this->config['replace_args']['featured_image_replacers'] = explode( ',', $settings['demo_xml_featured_images'] );
 		}
 
+		if ( isset( $settings['demo_xml_meta_keys_replaced_by_id'] ) && !empty( $settings['demo_xml_meta_keys_replaced_by_id'] ) ) {
+			$this->config['replace_args']['replace_in_metadata']['by_id'] = array_keys( $settings['demo_xml_meta_keys_replaced_by_id'] );
+		}
+
+		if ( isset( $settings['demo_xml_meta_keys_replaced_by_url'] ) && !empty( $settings['demo_xml_meta_keys_replaced_by_url'] ) ) {
+			$this->config['replace_args']['replace_in_metadata']['by_url'] = explode( ',', $settings['demo_xml_meta_keys_replaced_by_url'] );
+		}
+
 		if ( isset( $this->config['replace_args'] ) ) {
 			DemoXmlPlugin::demo_export( $this->config['replace_args'] );
 			die();
