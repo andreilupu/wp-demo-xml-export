@@ -29,11 +29,13 @@
 	<?php $attrs = array (
 		'name' => $name,
 		'id' => $idname,
-		'type' => 'text',
+		'type' => 'hidden',
 		'value' => $form->autovalue($name)
 	); ?>
 
 	<input class="pix_core_gallery" <?php echo $field->htmlattributes($attrs); ?>/>
 
+	<a class="open_gallery" href="#">Open Gallery</a>
+	<a class="clear_gallery" href="#">Clear Gallery</a>
 	<ul class="preview_list"></ul>
 </div>

@@ -49,11 +49,9 @@
 
 			init: function() {
 
-				$('.pix_core_gallery').on('click', function(e){
+				$('.open_gallery').on('click', function(e){
 					e.preventDefault();
-					wp.media.EditPixCoreGallery.element = this;
-					//console.log(wp.media.EditPixCoreGallery.element);
-
+					wp.media.EditPixCoreGallery.element = $(this ).siblings('.pix_core_gallery');
 					wp.media.EditPixCoreGallery.frame().open();
 				});
 			},
@@ -115,6 +113,14 @@
 		pix_core_gallery_ajax_preview();
 		$( wp.media.EditPixCoreGallery.init );
 
+		$('.clear_gallery').on('click', function(e){
+			e.preventDefault();
+			var gallery = $(this).siblings('.pix_core_gallery');
+
+			gallery.val('');
+
+			pix_core_gallery_ajax_preview();
+		});
 	});
 
 	var pix_core_gallery_ajax_preview = function(){
@@ -124,38 +130,35 @@
 
 			ids = $(el).val();
 
-			$.ajax({
-				type: "post",url: locals.ajax_url,data: { action: 'pix_core_gallery_preview', attachments_ids: ids },
-				beforeSend: function() {
-					$('.open_pix_core_gallery i').removeClass('icon-camera-retro');
-					$('.open_pix_core_gallery i').addClass('icon-spin icon-refresh');
-				}, //show loading just when link is clicked
-				complete: function() {
-					$('.open_pix_core_gallery i').removeClass('icon-spin icon-refresh');
-					$('.open_pix_core_gallery i').addClass('icon-camera-retro');
-				}, //stop showing loading when the process is complete
-				success: function( response ){
-					var result = JSON.parse(response);
+			if ( ids !== '' ) {
 
-					if (result.success ) {
-						//console.log($(el));
-						$(el ).parent().find('ul.preview_list').html(result.output);
+				$.ajax( {
+					type: "post",
+					url: locals.ajax_url,
+					data: {action: 'pix_core_gallery_preview', attachments_ids: ids},
+					beforeSend: function() {
+						$( '.open_pix_core_gallery i' ).removeClass( 'icon-camera-retro' );
+						$( '.open_pix_core_gallery i' ).addClass( 'icon-spin icon-refresh' );
+					}, //show loading just when link is clicked
+					complete: function() {
+						$( '.open_pix_core_gallery i' ).removeClass( 'icon-spin icon-refresh' );
+						$( '.open_pix_core_gallery i' ).addClass( 'icon-camera-retro' );
+					}, //stop showing loading when the process is complete
+					success: function( response ) {
+						var result = JSON.parse( response );
+						if ( result.success ) {
+							$( el ).parent().find( 'ul.preview_list' ).html( result.output );
+						}
 					}
-				}
-			});
-
+				} );
+			} else {
+				$( el ).parent().find( 'ul.preview_list' ).html( '' );
+			}
 		}) ;
 
 
 
 	};
-
-
-
-
-
-
-
 
 
 
