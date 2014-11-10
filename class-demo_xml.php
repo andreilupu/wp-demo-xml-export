@@ -112,7 +112,7 @@ class DemoXmlPlugin {
 		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
-		add_filter('wxr_export_post_meta_value', array( $this, 'my_custom_post_meta_filter'), 10, 2);
+		add_filter( 'wxr_export_post_meta_value', array( $this, 'replace_metadata_by_id'), 10, 2);
 
 		// add this action the the latest hook possible so we catch all post_types
 		// but do not place this after the output started because it's modifing the header
@@ -1185,8 +1185,7 @@ class DemoXmlPlugin {
 		}
 	}
 
-	function my_custom_post_meta_filter( $meta_key, $meta_value ) {
-
+	function replace_metadata_by_id( $meta_key, $meta_value ) {
 		/**
 		 * Some checks
 		 */
