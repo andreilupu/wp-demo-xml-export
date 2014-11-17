@@ -1005,8 +1005,6 @@ class DemoXmlPlugin {
 						continue;
 					}
 
-					self::wxr_post_taxonomy();
-
 					$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post->ID ) ); ?>
 					<item>
 						<title><?php echo apply_filters( 'the_title_rss', $post->post_title ); ?></title>
@@ -1048,6 +1046,9 @@ class DemoXmlPlugin {
 						<wp:post_password><?php echo $post->post_password; ?></wp:post_password>
 						<wp:is_sticky><?php echo $is_sticky; ?></wp:is_sticky>
 						<?php
+						// categories first
+						self::wxr_post_taxonomy();
+
 						foreach ( $postmeta as $meta ) :
 
 							if ( $meta->meta_key === '_thumbnail_id' && !empty($meta->meta_value) ) {
