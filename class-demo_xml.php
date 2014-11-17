@@ -321,7 +321,8 @@ class DemoXmlPlugin {
 	 */
 	function add_plugin_admin_menu() {
 
-		$this->plugin_screen_hook_suffix = add_options_page(
+		$this->plugin_screen_hook_suffix = add_submenu_page(
+			'tools.php',
 			__( 'DemoXml', $this->plugin_slug ),
 			__( 'DemoXml', $this->plugin_slug ),
 			'edit_plugins',
@@ -342,7 +343,7 @@ class DemoXmlPlugin {
 	 * Add settings action link to the plugins page.
 	 */
 	function add_action_links( $links ) {
-		return array_merge( array( 'settings' => '<a href="' . admin_url( 'options-general.php?page=demo_xml' ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>' ), $links );
+		return array_merge( array( 'settings' => '<a href="' . admin_url( 'tools.php?page=demo_xml' ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>' ), $links );
 	}
 
 	static function get_base_path(){
