@@ -7,7 +7,7 @@
  * @param $values
  */
 
-function save_proof_settings( $values ){
+function save_demo_xml_settings( $values ){
 
 //	$options = get_option('pixtypes_settings');
 	// maybe proccess some setting on save

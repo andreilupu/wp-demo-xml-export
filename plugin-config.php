@@ -70,7 +70,7 @@ return array
 
 		'callbacks' => array
 			(
-				'save_settings' => 'save_proof_settings'
+				'save_settings' => 'save_demo_xml_settings'
 			),
 
 		// shows exception traces on error
