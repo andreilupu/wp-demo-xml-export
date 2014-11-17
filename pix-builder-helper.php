@@ -1,16 +1,14 @@
 <?php
 // This file needs to be used outside of plugin
 
-
 /*
-Plugin Name: Pix Builder Helper
-Plugin URI: http://wordpress.org/plugins/hello-dolly/
-Description: This is it.
-Author: Me
+Plugin Name: DemoXml - Pix Builder Helper
+Plugin URI: http://wordpress.org/plugins/pix_builder_export_helper/
+Description: This is only for Pile.
+Author: Andrei Lupu
 Version: 2.6
-Author URI: http://ma.tt/
+Author URI: http://andrei-lupu.com/
 */
-
 
 add_filter('wxr_export_post_meta_value', 'pix_builder_filter_try', 10, 2);
 

@@ -1,19 +1,12 @@
 <?php
 /*
-* @package   DemoXml
-* @author    PixelGrade <contact@pixelgrade.com>
-* @license   GPL-2.0+
-* @link      http://pixelgrade.com
-* @copyright 2014 PixelGrade
-*
-* @wordpress-plugin
 Plugin Name: DemoXml
 Plugin URI:  http://pixelgrade.com
-Description: WordPress photo gallery proofing plugin.
-Version: 1.0.5
-Author: PixelGrade
-Author URI: http://pixelgrade.com
-Author Email: contact@pixelgrade.com
+Description: WordPress demo data export.
+Version: 0.0.5
+Author: Andrei Lupu
+Author URI: http://andrei-lupu.com
+Author Email: andrei-lupu@pixelgrade.com
 Text Domain: proof
 License:     GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
