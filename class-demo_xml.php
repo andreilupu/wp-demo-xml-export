@@ -109,10 +109,8 @@ class DemoXmlPlugin {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 99999999999 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		if ( ! empty( self::$attachment_replacers ) ) {
-			add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
-			add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
-		}
+		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
+		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
 		add_filter( 'wxr_export_post_meta_value', array( $this, 'replace_metadata_by_id'), 10, 2);
 

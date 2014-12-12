@@ -81,7 +81,8 @@ $current_val = $form->autovalue($name, $default); ?>
 			'_download_expiry',
 			'_manage_stock',
 			'_wp_attachment_metadata',
-			'_wp_page_template'
+			'_wp_page_template',
+			'_menu_item_orphaned'
 		);
 
 		foreach ( $meta_keys as $meta ) {
