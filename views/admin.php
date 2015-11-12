@@ -47,7 +47,7 @@
 		wp_enqueue_media(); ?>
 
 		<button type="submit" name="export_xml_submit" class="button button-primary">
-			<?php _e('Exportå', 'demo_xml_txtd'); ?>
+			<?php _e('Export', 'demo_xml_txtd'); ?>
 		</button>
 
 		<button type="submit" class="button button-primary">
@@ -76,6 +76,13 @@
 //			)
 //		); ?>
 
+		<button type="submit" name="export_xml_submit" class="button button-primary">
+			<?php _e('Export', 'demo_xml_txtd'); ?>
+		</button>
+
+		<button type="submit" class="button button-primary">
+			<?php _e('Save Changes', 'demo_xml_txtd'); ?>
+		</button>
 
 
 		<?php echo $f->endform() ?>
