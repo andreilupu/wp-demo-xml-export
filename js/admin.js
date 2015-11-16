@@ -86,8 +86,8 @@
 				// Ignore the rest of the match object.
 				shortcode = shortcode.shortcode;
 
-				if ( _.isUndefined( shortcode.get('id') ) && ! _.isUndefined( defaultPostId ) )
-					shortcode.set( 'id', defaultPostId );
+				if ( _.isUndefined( shortcode.get('id') ) && ! _.isUndefined( defaultPostId ) ) return;
+					//shortcode.set( 'id', defaultPostId );
 
 				attachments = wp.media.gallery.attachments( shortcode );
 				selection = new wp.media.model.Selection( attachments.models, {
