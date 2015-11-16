@@ -57,6 +57,7 @@
 		<?php
 
 		echo $f->field('hiddens')->render();
+		echo $f->field('general')->render();
 		echo $f->field('replacers')->render();
 		echo $f->field('ignores')->render();
 		echo $f->field('featured_images')->render();

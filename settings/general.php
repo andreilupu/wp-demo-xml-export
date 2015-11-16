@@ -1,23 +1,25 @@
 <?php
 //not used yet - moved them to a per gallery option
-return array
-	(
-		'type' => 'postbox',
-		'label' => 'General Settings',
-		'options' => array
-			(
-				'image_display_name' => array (
-						'name' => 'image_display_name',
-						'label' => __('Images Name', 'demo_xml_txtd'),
-						'desc' => __('What image name should we display under each one?', 'demo_xml_txtd'),
-						'default' => 'unique_ids',
-						'type' => 'select',
-						'options' => array (
-								'unique_ids' => __('Unique IDs', 'demo_xml_txtd'),
-								'consecutive_ids' => __('Consecutive IDs', 'demo_xml_txtd'),
-								'file_name' => __('File Name', 'demo_xml_txtd'),
-								'consecutive_ids_image_title' => __('IDs and Image Title', 'demo_xml_txtd'),
-							),
-					),
+return array(
+	'type'    => 'postbox',
+	'label'   => 'General Settings',
+	'options' => array(
+		'enable_selective_export' => array(
+			'label'      => __( 'Selective export', 'pixcustomify_txtd' ),
+			'default'    => false,
+			'type'       => 'switch',
+			'show_group' => 'post_types_group'
+		),
+		'post_types_group'         => array(
+			'type'    => 'group',
+			'options' => array(
+				'display_on_post_types' => array(
+					'label'       => __( 'Post Types', 'pixfields_txtd' ),
+					'default'     => array( 'post' => 'on', 'page' => 'on' ),
+					'type'        => 'post_types_checkbox',
+					'description' => 'Which post types should have export box'
+				),
 			)
-	); # config
+		),
+	)
+); # config

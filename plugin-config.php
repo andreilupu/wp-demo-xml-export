@@ -27,6 +27,8 @@ return array
 			(
 				'hiddens'
 					=> include 'settings/hiddens'.EXT,
+				'general'
+				=> include 'settings/general'.EXT,
 				'replacers'
 					=> include 'settings/replacers'.EXT,
 				'ignores'

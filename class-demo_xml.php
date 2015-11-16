@@ -106,23 +106,19 @@ class DemoXmlPlugin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 99999999999 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+//		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 99999999999 );
+//		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls'), 10, 1);
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids'), 10, 1);
 
 		add_filter( 'wxr_export_post_meta_value', array( $this, 'replace_metadata_by_id'), 10, 2);
 
-		// add this action the the latest hook possible so we catch all post_types
-		// but do not place this after the output started because it's modifing the header
 		add_action( 'admin_init', array( $this, 'call_demo_export' ) );
 
 		/**
 		 * Ajax Callbacks
 		 */
-//		add_action('wp_ajax_demo_xml_image_click', array(&$this, 'ajax_click_on_photo'));
-//		add_action('wp_ajax_nopriv_demo_xml_image_click', array(&$this, 'ajax_click_on_photo'));
 		add_action('wp_ajax_pix_core_gallery_preview', array(&$this, 'ajax_pix_core_gallery_preview'));
 	}
 
@@ -132,6 +128,14 @@ class DemoXmlPlugin {
 		}
 
 		$settings = get_option('demo_xml_settings');
+
+		if ( isset( $settings['enable_selective_export'] ) && !empty( $settings['enable_selective_export'] ) ) {
+			$this->config['enable_selective_export'] =  $settings['enable_selective_export'];
+		}
+
+		if ( isset( $settings['display_on_post_types'] ) && !empty( $settings['display_on_post_types'] ) ) {
+			$this->config['display_on_post_types'] = $settings['display_on_post_types'];
+		}
 
 		if ( isset( $settings['demo_xml_replacers'] ) && !empty( $settings['demo_xml_replacers'] ) ) {
 			$this->config['replace_args']['replacers'] = explode( ',', $settings['demo_xml_replacers'] );
@@ -221,7 +225,6 @@ class DemoXmlPlugin {
 		load_plugin_textdomain( $domain, FALSE, basename( dirname( __FILE__ ) ) . '/lang/' );
 	}
 
-
 	// create an ajax call which will return a preview to the current gallery
 	function ajax_pix_core_gallery_preview(){
 		$result = array('success' => false, 'output' => '');
@@ -240,7 +243,6 @@ class DemoXmlPlugin {
 			$attach = wp_get_attachment_image_src( $id, 'thumbnail', false);
 
 			$result["output"] .= '<li><img src="'.$attach[0] .'" /></li>';
-
 		}
 		$result["success"] = true;
 		echo json_encode( $result );
@@ -297,13 +299,18 @@ class DemoXmlPlugin {
 	 * @since    1.0.0
 	 */
 	function enqueue_styles() {
-
-		if ( !wp_style_is( 'wpgrade-main-style') ) {
-			wp_enqueue_style( 'demo_xml_inuit', plugins_url( 'css/inuit.css', __FILE__ ), array(), $this->version );
-			wp_enqueue_style( 'demo_xml_magnific-popup', plugins_url( 'css/mangnific-popup.css', __FILE__ ), array(), $this->version );
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
 		}
 
-//		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'css/public.css', __FILE__ ), array('wpgrade-main-style'), $this->version );
+		$screen = get_current_screen();
+
+		if ( $screen->id == $this->plugin_screen_hook_suffix ) {
+			if ( ! wp_style_is( 'wpgrade-main-style' ) ) {
+				wp_enqueue_style( 'demo_xml_inuit', plugins_url( 'css/inuit.css', __FILE__ ), array(), $this->version );
+				wp_enqueue_style( 'demo_xml_magnific-popup', plugins_url( 'css/mangnific-popup.css', __FILE__ ), array(), $this->version );
+			}
+		}
 	}
 
 	/**
@@ -312,8 +319,16 @@ class DemoXmlPlugin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version, true );
-		wp_localize_script( $this->plugin_slug . '-plugin-script', 'demo_xml', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( $screen->id == $this->plugin_screen_hook_suffix ) {
+			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), $this->version, true );
+			wp_localize_script( $this->plugin_slug . '-plugin-script', 'demo_xml', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+		}
 	}
 
 	/**
@@ -1149,6 +1164,10 @@ class DemoXmlPlugin {
 
 	function replace_the_content_urls_pregmatch_callback ($matches){
 
+		if ( ! isset( DemoXmlPlugin::$attachment_replacers[0] ) ) {
+			return false;
+		}
+
 		$attach_id = DemoXmlPlugin::$attachment_replacers[0];
 		$src = wp_get_attachment_image_src( $attach_id, 'full' );
 		if ( strpos($matches[0], 'wp-content/uploads' ) > 0 ) {
@@ -1157,7 +1176,11 @@ class DemoXmlPlugin {
 
 		DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
 
-		return $matches[0];
+		if ( isset( $matches[0] ) ) {
+			return $matches[0];
+		}
+
+		return false;
 	}
 
 	function replace_gallery_shortcodes_ids ( $content ) {
@@ -1177,8 +1200,10 @@ class DemoXmlPlugin {
 			$replace_ids = array();
 			$matches[2] = explode(',' , $matches[2]);
 			foreach( $matches[2] as $key => $match ) {
-				$replace_ids[$key] = self::$attachment_replacers[0];
-				self::rotate_array( self::$attachment_replacers );
+				if ( isset( self::$attachment_replacers[0] ) ) {
+					$replace_ids[$key] = self::$attachment_replacers[0];
+					self::rotate_array( self::$attachment_replacers );
+				}
 			}
 
 			$replace_string = implode(',', $replace_ids );
