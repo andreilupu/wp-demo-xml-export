@@ -4,8 +4,8 @@
 		wp.media.EditPixCoreGallery = {
 
 			frame: function() {
-				if ( this._frame )
-					return this._frame;
+				//if ( this._frame )
+				//	return this._frame;
 				var selection = this.select();
 				// create our own media iframe
 				this._frame = wp.media({
@@ -51,7 +51,7 @@
 
 				$('.open_gallery').on('click', function(e){
 					e.preventDefault();
-					wp.media.EditPixCoreGallery.element = $(this ).siblings('.pix_core_gallery');
+					wp.media.EditPixCoreGallery.element = $(this).siblings('.pix_core_gallery');
 					wp.media.EditPixCoreGallery.frame().open();
 				});
 			},
@@ -64,6 +64,10 @@
 					columns =  $('#pixgalleries_columns').val(),
 					defaultPostId = wp.media.gallery.defaults.id,
 					attachments, selection;
+
+				if ( galleries_ids === '' ) {
+					return;
+				}
 
 				if ( typeof random_order !== 'undefined' ) {
 					random_order = ' orderby="rand"';
@@ -78,18 +82,18 @@
 				}
 
 				var shortcode = wp.shortcode.next( 'gallery', '[gallery'+columns+' ids="'+ galleries_ids +'"'+ random_order +']' );
-
 				// Bail if we didn't match the shortcode or all of the content.
-				if ( ! shortcode )
-					return;
 
+				if ( ! shortcode ) {
+					return;
+				}
 				// Ignore the rest of the match object.
 				shortcode = shortcode.shortcode;
-
-				if ( _.isUndefined( shortcode.get('id') ) && ! _.isUndefined( defaultPostId ) ) return;
-					//shortcode.set( 'id', defaultPostId );
+				if ( _.isUndefined( shortcode.get('id') ) && ! _.isUndefined( defaultPostId ) )
+					shortcode.set( 'id', null );
 
 				attachments = wp.media.gallery.attachments( shortcode );
+
 				selection = new wp.media.model.Selection( attachments.models, {
 					props:    attachments.props.toJSON(),
 					multiple: true

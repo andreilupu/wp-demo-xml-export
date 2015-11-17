@@ -445,6 +445,8 @@ class DemoXmlPlugin {
 
 		self::display_header( $post_ids, $filename );
 
+		echo "\t\t\t<!-- To import this information into a WordPress site follow these steps: -->\n";
+
 		self::display_terms( $args );
 
 		// first lets import replacers
