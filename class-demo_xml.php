@@ -445,20 +445,13 @@ class DemoXmlPlugin {
 
 		self::display_header( $post_ids, $filename );
 
-		echo "\t\t\t<!-- To import this information into a WordPress site follow these steps: -->\n";
-
 		self::display_terms( $args );
-
 		// first lets import replacers
 		self::display_replacers( $replacers );
-
 		// first lets import ignored attachments by replace
 		self::display_ignored( $ignore );
-
 		self::display_featured_images( $featured_image_replacers );
-
 		self::display_posts( $post_ids );
-
 		self::display_footer();
 	}
 
@@ -553,6 +546,7 @@ static function display_terms( $args ) {
 		unset( $categories, $custom_taxonomies, $custom_terms );
 	}
 
+	echo "<!-- TERMS START -->\n";
 	foreach ( $cats as $c ) : ?>
 		<wp:category><wp:term_id><?php echo $c->term_id ?></wp:term_id><wp:category_nicename><?php echo $c->slug; ?></wp:category_nicename><wp:category_parent><?php echo $c->parent ? $cats[ $c->parent ]->slug : ''; ?></wp:category_parent><?php self::wxr_cat_name( $c ); ?><?php self::wxr_category_description( $c ); ?><?php self::wxr_term_meta( $c ); ?></wp:category>
 <?php endforeach;
@@ -565,6 +559,7 @@ static function display_terms( $args ) {
 		<wp:term><wp:term_id><?php echo $t->term_id ?></wp:term_id><wp:term_taxonomy><?php echo $t->taxonomy; ?></wp:term_taxonomy><wp:term_slug><?php echo $t->slug; ?></wp:term_slug><wp:term_parent><?php echo $t->parent ? $terms[ $t->parent ]->slug : ''; ?></wp:term_parent><?php self::wxr_term_name( $t );?><?php self::wxr_term_description( $t );?><?php self::wxr_term_meta( $t ); ?></wp:term>
 <?php endforeach;
 
+	echo "<!-- TERMS END -->\n";
 	if ( 'all' == $args['content'] ) {
 		self::wxr_nav_menu_terms();
 	}
@@ -576,53 +571,59 @@ static function display_terms( $args ) {
 <?php }
 
 static function display_replacers( $post_ids ) {
-global $wpdb, $post;
+	global $wpdb, $post;
 
-if ( $post_ids ) {
-	global $wp_query;
+	if ( $post_ids ) {
+		global $wp_query;
 
-	// Fake being in the loop.
-	$wp_query->in_the_loop = true;
+		echo "<!-- REPLACERS START -->\n";
+		// Fake being in the loop.
+		$wp_query->in_the_loop = true;
 
-	// Fetch 20 posts at a time rather than loading the entire table into memory.
-	while ( $next_posts = array_splice( $post_ids, 0, 20 ) ) {
-		$where = 'WHERE ID IN (' . join( ',', $next_posts ) . ')';
-		$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
+		// Fetch 20 posts at a time rather than loading the entire table into memory.
+		while ( $next_posts = array_splice( $post_ids, 0, 20 ) ) {
+			$where = 'WHERE ID IN (' . join( ',', $next_posts ) . ')';
+			$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
 
-		// Begin Loop.
-		foreach ( $posts as $post ) {
-			ob_start();
-			self::display_item( $post );
-			array_push( self::$attachment_replacers, $post->ID );
-			echo( ob_get_clean() );
+			// Begin Loop.
+			foreach ( $posts as $post ) {
+				ob_start();
+				self::display_item( $post );
+				array_push( self::$attachment_replacers, $post->ID );
+				echo( ob_get_clean() );
+			}
 		}
+
+		echo "<!-- REPLACERS END -->\n";
 	}
-}
 }
 
 static function display_ignored( $post_ids ) {
-global $wpdb, $post;
+	global $wpdb, $post;
 
-if ( $post_ids ) {
-	global $wp_query;
+	if ( $post_ids ) {
+		global $wp_query;
 
-	// Fake being in the loop.
-	$wp_query->in_the_loop = true;
+		echo "<!-- IGNORED START -->\n";
+		// Fake being in the loop.
+		$wp_query->in_the_loop = true;
 
-	// Fetch 20 posts at a time rather than loading the entire table into memory.
-	while ( $next_posts = array_splice( $post_ids, 0, 20 ) ) {
-		$where = 'WHERE ID IN (' . join( ',', $next_posts ) . ')';
-		$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
+		// Fetch 20 posts at a time rather than loading the entire table into memory.
+		while ( $next_posts = array_splice( $post_ids, 0, 20 ) ) {
+			$where = 'WHERE ID IN (' . join( ',', $next_posts ) . ')';
+			$posts = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} $where" );
 
-		// Begin Loop.
-		foreach ( $posts as $post ) {
-			ob_start();
-			self::display_item( $post );
-			array_push( self::$ignored_attachments, $post->ID );
-			echo( ob_get_clean() );
+			// Begin Loop.
+			foreach ( $posts as $post ) {
+				ob_start();
+				self::display_item( $post );
+				array_push( self::$ignored_attachments, $post->ID );
+				echo( ob_get_clean() );
+			}
 		}
+
+		echo "<!-- IGNORED END -->\n";
 	}
-}
 }
 
 	static function display_featured_images( $post_ids ) {
@@ -630,6 +631,8 @@ if ( $post_ids ) {
 
 		if ( $post_ids ) {
 			global $wp_query;
+
+			echo "<!-- FEATURED IMAGES START -->\n";
 
 			// Fake being in the loop.
 			$wp_query->in_the_loop = true;
@@ -647,6 +650,8 @@ if ( $post_ids ) {
 					echo( ob_get_clean() );
 				}
 			}
+
+			echo "<!-- FEATURED IMAGES END -->\n";
 		}
 	}
 
@@ -656,6 +661,7 @@ if ( $post_ids ) {
 		if ( $post_ids ) {
 			global $wp_query;
 
+			echo "<!-- POSTS START -->\n";
 			// Fake being in the loop.
 			$wp_query->in_the_loop = true;
 
@@ -671,6 +677,8 @@ if ( $post_ids ) {
 					echo( ob_get_clean() );
 				}
 			}
+
+			echo "<!-- POSTS END -->\n";
 		}
 	}
 
