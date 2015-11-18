@@ -699,7 +699,7 @@ static function display_ignored( $post_ids ) {
 		$new_id = $post->ID;
 		// in case this is an attachment let's make the id unique
 		if ( $post->post_type === 'attachment' ) {
-			$new_id = '999999' . $post->ID;
+			$new_id = '9999' . $post->ID;
 		}
 
 		$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post->ID ) );  ?>
@@ -1087,7 +1087,7 @@ static function display_footer() { ?>
 			 */
 			if ( ! apply_filters( 'wxr_export_skip_termmeta', false, $meta->meta_key, $meta ) ) {
 				if ( $meta->meta_key === 'pix_term_icon' && ! empty( $meta->meta_value ) ) {
-					$meta->meta_value = '999999' . $meta->meta_value;
+					$meta->meta_value = '9999' . $meta->meta_value;
 				}
 				printf( "<wp:termmeta><wp:meta_key>%s</wp:meta_key><wp:meta_value>%s</wp:meta_value></wp:termmeta>", self::wxr_cdata( $meta->meta_key ), self::wxr_cdata( $meta->meta_value ) );
 			}
