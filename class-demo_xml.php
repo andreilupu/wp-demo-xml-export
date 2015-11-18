@@ -725,7 +725,7 @@ static function display_ignored( $post_ids ) {
 				 */
 				echo self::wxr_cdata( apply_filters( 'the_excerpt_export', $post->post_excerpt ) );
 				?></excerpt:encoded>
-			<wp:post_id><?php echo $post->ID; ?></wp:post_id>
+			<wp:post_id><?php echo ( $post->post_type == 'attachment' ) ? "999999" : ''; echo $post->ID; ?></wp:post_id>
 			<wp:post_date><?php echo $post->post_date; ?></wp:post_date>
 			<wp:post_date_gmt><?php echo $post->post_date_gmt; ?></wp:post_date_gmt>
 			<wp:comment_status><?php echo $post->comment_status; ?></wp:comment_status>
@@ -830,74 +830,73 @@ static function display_footer() { ?>
 
 	static function replace_featured_image( $post_id, $value ) {
 
-	if ( ! empty( self::$featured_image_replacers ) ) {
-		return self::$featured_image_replacers[0];
-	}
+		if ( ! empty( self::$featured_image_replacers ) ) {
+			return self::$featured_image_replacers[0];
+		}
 
-	return $value;
+		return $value;
 	}
 
 	function replace_the_content_urls( $content ) {
-	$reg_exUrl = "#((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'\".,<>?]))#i";
-	$content   = preg_replace_callback( $reg_exUrl, array(
-		$this,
-		'replace_the_content_urls_pregmatch_callback'
-	), $content );
+		$reg_exUrl = "#((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'\".,<>?]))#i";
+		$content   = preg_replace_callback( $reg_exUrl, array(
+			$this,
+			'replace_the_content_urls_pregmatch_callback'
+		), $content );
 
-	return $content;
+		return $content;
 	}
 
 	function replace_the_content_urls_pregmatch_callback( $matches ) {
 
-	if ( ! isset( DemoXmlPlugin::$attachment_replacers[0] ) ) {
+		if ( ! isset( DemoXmlPlugin::$attachment_replacers[0] ) ) {
+			return false;
+		}
+
+		$attach_id = DemoXmlPlugin::$attachment_replacers[0];
+		$src       = wp_get_attachment_image_src( $attach_id, 'full' );
+		if ( strpos( $matches[0], 'wp-content/uploads' ) > 0 ) {
+			$matches[0] = $src[0];
+		}
+
+		DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
+
+		if ( isset( $matches[0] ) ) {
+			return $matches[0];
+		}
+
 		return false;
 	}
 
-	$attach_id = DemoXmlPlugin::$attachment_replacers[0];
-	$src       = wp_get_attachment_image_src( $attach_id, 'full' );
-	if ( strpos( $matches[0], 'wp-content/uploads' ) > 0 ) {
-		$matches[0] = $src[0];
-	}
-
-	DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
-
-	if ( isset( $matches[0] ) ) {
-		return $matches[0];
-	}
-
-	return false;
-	}
-
 	function replace_gallery_shortcodes_ids( $content ) {
+		// pregmatch only ids attribute
+		$pattern = '((\[gallery.*])?ids=\"(.*)\")';
 
-	// pregmatch only ids attribute
-	$pattern = '((\[gallery.*])?ids=\"(.*)\")';
+		$content = preg_replace_callback( $pattern, array(
+			$this,
+			'replace_gallery_shortcodes_ids_pregmatch_callback'
+		), $content );
 
-	$content = preg_replace_callback( $pattern, array(
-		$this,
-		'replace_gallery_shortcodes_ids_pregmatch_callback'
-	), $content );
-
-	return $content;
+		return $content;
 	}
 
 	function replace_gallery_shortcodes_ids_pregmatch_callback( $matches ) {
 
-	if ( isset( $matches[2] ) && ! empty( $matches[2] ) ) {
+		if ( isset( $matches[2] ) && ! empty( $matches[2] ) ) {
 
-		$replace_ids = array();
-		$matches[2]  = explode( ',', $matches[2] );
-		foreach ( $matches[2] as $key => $match ) {
-			if ( isset( self::$attachment_replacers[0] ) ) {
-				$replace_ids[ $key ] = self::$attachment_replacers[0];
-				self::rotate_array( self::$attachment_replacers );
+			$replace_ids = array();
+			$matches[2]  = explode( ',', $matches[2] );
+			foreach ( $matches[2] as $key => $match ) {
+				if ( isset( self::$attachment_replacers[0] ) ) {
+					$replace_ids[ $key ] = self::$attachment_replacers[0];
+					self::rotate_array( self::$attachment_replacers );
+				}
 			}
+
+			$replace_string = implode( ',', $replace_ids );
+
+			return ' ids="' . $replace_string . '"';
 		}
-
-		$replace_string = implode( ',', $replace_ids );
-
-		return ' ids="' . $replace_string . '"';
-	}
 	}
 
 	function replace_metadata_by_id( $meta_key, $meta_value ) {
