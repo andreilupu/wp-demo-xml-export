@@ -866,7 +866,7 @@ static function display_footer() { ?>
 			$matches[0] = $src[0];
 		}
 
-		DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
+		DemoXmlPlugin::$attachment_replacers = DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
 
 		if ( isset( $matches[0] ) ) {
 			return $matches[0];
@@ -895,8 +895,8 @@ static function display_footer() { ?>
 			$matches[2]  = explode( ',', $matches[2] );
 			foreach ( $matches[2] as $key => $match ) {
 				if ( isset( self::$attachment_replacers[0] ) ) {
+					self::$attachment_replacers = self::rotate_array( self::$attachment_replacers );
 					$replace_ids[ $key ] = self::$attachment_replacers[0];
-					self::rotate_array( self::$attachment_replacers );
 				}
 			}
 
@@ -922,10 +922,10 @@ static function display_footer() { ?>
 			// always get the first id, and after that shift the array
 			if ( isset( $replacers[0] ) ) {
 				$new_meta[ $key ] = $replacers[0];
-				$replacers        = self::rotate_array( $replacers );
 			}
 		}
 
+		self::$attachment_replacers        = self::rotate_array( $replacers );
 		$return_string = implode( ',', $new_meta );
 
 		return $return_string;
