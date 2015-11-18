@@ -836,6 +836,7 @@ static function display_footer() { ?>
 	static function replace_featured_image( $post_id, $value ) {
 
 		if ( ! empty( self::$featured_image_replacers ) ) {
+			DemoXmlPlugin::$featured_image_replacers = DemoXmlPlugin::rotate_array( DemoXmlPlugin::$featured_image_replacers );
 			return self::$featured_image_replacers[0];
 		}
 
@@ -857,14 +858,13 @@ static function display_footer() { ?>
 		if ( ! isset( DemoXmlPlugin::$attachment_replacers[0] ) ) {
 			return false;
 		}
+		DemoXmlPlugin::$attachment_replacers = DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
 
 		$attach_id = DemoXmlPlugin::$attachment_replacers[0];
 		$src       = wp_get_attachment_image_src( $attach_id, 'full' );
 		if ( strpos( $matches[0], 'wp-content/uploads' ) > 0 ) {
 			$matches[0] = $src[0];
 		}
-
-		DemoXmlPlugin::$attachment_replacers = DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
 
 		if ( isset( $matches[0] ) ) {
 			return $matches[0];
@@ -919,6 +919,7 @@ static function display_footer() { ?>
 		foreach ( $ids as $key => $id ) {
 			// always get the first id, and after that shift the array
 			if ( isset( $replacers[0] ) ) {
+				$replacers = self::rotate_array( $replacers );
 				$new_meta[ $key ] = $replacers[0];
 			}
 		}
