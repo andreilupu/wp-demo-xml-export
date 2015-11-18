@@ -588,7 +588,7 @@ static function display_replacers( $post_ids ) {
 			// Begin Loop.
 			foreach ( $posts as $post ) {
 				ob_start();
-				self::display_item( $post );
+				self::display_item( $post, $is_attachment = true );
 				array_push( self::$attachment_replacers, $post->ID );
 				echo( ob_get_clean() );
 			}
@@ -616,7 +616,7 @@ static function display_ignored( $post_ids ) {
 			// Begin Loop.
 			foreach ( $posts as $post ) {
 				ob_start();
-				self::display_item( $post );
+				self::display_item( $post, $is_attachment = true );
 				array_push( self::$ignored_attachments, $post->ID );
 				echo( ob_get_clean() );
 			}
@@ -645,7 +645,7 @@ static function display_ignored( $post_ids ) {
 				// Begin Loop.
 				foreach ( $posts as $post ) {
 					ob_start();
-					self::display_item( $post, $is_attach = true, $is_featured_image = true );
+					self::display_item( $post, $is_attach = true );
 					array_push( self::$featured_image_replacers, $post->ID );
 					echo( ob_get_clean() );
 				}
@@ -682,7 +682,7 @@ static function display_ignored( $post_ids ) {
 		}
 	}
 
-	static function display_item( $post, $is_attachment = false, $is_featured_image = false ) {
+	static function display_item( $post, $is_attachment = false) {
 		global $wpdb;
 
 		setup_postdata( $post );
@@ -693,8 +693,14 @@ static function display_ignored( $post_ids ) {
 		}
 
 		// we already imported any attachments needed
-		if ( $is_attachment && $post->post_type == 'attachment' ) {
+		if ( $is_attachment && $post->post_type !== 'attachment' ) {
 			return;
+		}
+
+		$new_id = $post->ID;
+		// in case this is an attachment let's make the id unique
+		if ( $post->post_type === 'attachment' ) {
+			$new_id = '999999' . $post->ID;
 		}
 
 		$postmeta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->postmeta WHERE post_id = %d", $post->ID ) );  ?>
@@ -725,7 +731,7 @@ static function display_ignored( $post_ids ) {
 				 */
 				echo self::wxr_cdata( apply_filters( 'the_excerpt_export', $post->post_excerpt ) );
 				?></excerpt:encoded>
-			<wp:post_id><?php echo ( $post->post_type == 'attachment' ) ? "999999" : ''; echo $post->ID; ?></wp:post_id>
+			<wp:post_id><?php echo $new_id; ?></wp:post_id>
 			<wp:post_date><?php echo $post->post_date; ?></wp:post_date>
 			<wp:post_date_gmt><?php echo $post->post_date_gmt; ?></wp:post_date_gmt>
 			<wp:comment_status><?php echo $post->comment_status; ?></wp:comment_status>
@@ -747,7 +753,7 @@ static function display_ignored( $post_ids ) {
 			foreach ( $postmeta as $meta ) :
 
 				if ( $meta->meta_key === '_thumbnail_id' && ! empty( $meta->meta_value ) ) {
-					$meta->meta_value = self::replace_featured_image( $post->ID, $meta->meta_value );
+					$meta->meta_value = self::replace_featured_image( $new_id, $meta->meta_value );
 				}
 
 				/**
@@ -819,7 +825,7 @@ static function display_ignored( $post_ids ) {
 		</item>
 
 <?php
-		array_push( self::$imported_posts, $post->ID );
+		array_push( self::$imported_posts, $new_id );
 
 	}
 
@@ -1080,6 +1086,9 @@ static function display_footer() { ?>
 			 * @param object $meta Current meta object.
 			 */
 			if ( ! apply_filters( 'wxr_export_skip_termmeta', false, $meta->meta_key, $meta ) ) {
+				if ( $meta->meta_key === 'pix_term_icon' && ! empty( $meta->meta_value ) ) {
+					$meta->meta_value = '999999' . $meta->meta_value;
+				}
 				printf( "<wp:termmeta><wp:meta_key>%s</wp:meta_key><wp:meta_value>%s</wp:meta_value></wp:termmeta>", self::wxr_cdata( $meta->meta_key ), self::wxr_cdata( $meta->meta_value ) );
 			}
 		}
