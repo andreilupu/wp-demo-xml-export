@@ -692,6 +692,8 @@ static function display_ignored( $post_ids ) {
 		// we already imported any attachments needed
 		if ( $is_attachment && $post->post_type !== 'attachment' ) {
 			return;
+		} elseif( ! $is_attachment && $post->post_type === 'attachment' ) {
+			return;
 		}
 
 		$new_id = $post->ID;
