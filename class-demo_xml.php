@@ -861,7 +861,7 @@ static function display_footer() { ?>
 		DemoXmlPlugin::$attachment_replacers = DemoXmlPlugin::rotate_array( DemoXmlPlugin::$attachment_replacers );
 
 		$attach_id = DemoXmlPlugin::$attachment_replacers[0];
-		$src       = wp_get_attachment_image_src( $attach_id, 'full' );
+		$src       = wp_get_attachment_image_src( str_replace('9999', '', $attach_id), 'full' );
 		if ( strpos( $matches[0], 'wp-content/uploads' ) > 0 ) {
 			$matches[0] = $src[0];
 		}
