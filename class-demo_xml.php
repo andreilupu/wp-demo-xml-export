@@ -588,8 +588,8 @@ static function display_replacers( $post_ids ) {
 			// Begin Loop.
 			foreach ( $posts as $post ) {
 				ob_start();
-				self::display_item( $post, $is_attachment = true );
-				array_push( self::$attachment_replacers, $post->ID );
+				$new_post_id = self::display_item( $post, $is_attachment = true );
+				array_push( self::$attachment_replacers, $new_post_id );
 				echo( ob_get_clean() );
 			}
 		}
@@ -616,8 +616,8 @@ static function display_ignored( $post_ids ) {
 			// Begin Loop.
 			foreach ( $posts as $post ) {
 				ob_start();
-				self::display_item( $post, $is_attachment = true );
-				array_push( self::$ignored_attachments, $post->ID );
+				$new_post_id = self::display_item( $post, $is_attachment = true );
+				array_push( self::$ignored_attachments, $new_post_id );
 				echo( ob_get_clean() );
 			}
 		}
@@ -645,8 +645,8 @@ static function display_ignored( $post_ids ) {
 				// Begin Loop.
 				foreach ( $posts as $post ) {
 					ob_start();
-					self::display_item( $post, $is_attach = true );
-					array_push( self::$featured_image_replacers, $post->ID );
+					$new_post_id = self::display_item( $post, $is_attach = true );
+					array_push( self::$featured_image_replacers, $new_post_id );
 					echo( ob_get_clean() );
 				}
 			}
@@ -673,7 +673,7 @@ static function display_ignored( $post_ids ) {
 				// Begin Loop.
 				foreach ( $posts as $post ) {
 					ob_start();
-					self::display_item( $post );
+					$post_id = self::display_item( $post );
 					echo( ob_get_clean() );
 				}
 			}
@@ -825,8 +825,9 @@ static function display_ignored( $post_ids ) {
 		</item>
 
 <?php
-		array_push( self::$imported_posts, $new_id );
 
+		array_push( self::$imported_posts, $new_id );
+		return $new_id;
 	}
 
 static function display_footer() { ?>
