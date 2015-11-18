@@ -481,7 +481,6 @@ static function display_header( $post_ids, $filename ) {
 	<!--    existing user on the site or to create a new user. -->
 	<!-- 7. WordPress will then import each of the posts, pages, comments, categories, etc. -->
 	<!--    contained in this file into your site. -->
-
 	<?php the_generator( 'export' ); ?>
 	<rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/<?php echo self::$wxr_version; ?>/excerpt/"
@@ -490,7 +489,6 @@ static function display_header( $post_ids, $filename ) {
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:wp="http://wordpress.org/export/<?php echo self::$wxr_version; ?>/"
 	>
-
 	<channel>
 		<title><?php bloginfo_rss( 'name' ); ?></title>
 		<link><?php bloginfo_rss( 'url' ); ?></link>
@@ -500,7 +498,6 @@ static function display_header( $post_ids, $filename ) {
 		<wp:wxr_version><?php echo self::$wxr_version; ?></wp:wxr_version>
 		<wp:base_site_url><?php echo self::wxr_site_url(); ?></wp:base_site_url>
 		<wp:base_blog_url><?php bloginfo_rss( 'url' ); ?></wp:base_blog_url>
-
 <?php   self::wxr_authors_list( $post_ids );
 }
 
@@ -823,7 +820,6 @@ static function display_ignored( $post_ids ) {
 <?php
 			endforeach; ?>
 		</item>
-
 <?php
 
 		array_push( self::$imported_posts, $new_id );
