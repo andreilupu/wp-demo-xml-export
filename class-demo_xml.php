@@ -669,6 +669,11 @@ static function display_ignored( $post_ids ) {
 
 				// Begin Loop.
 				foreach ( $posts as $post ) {
+
+					if ( get_post_type( $post ) === 'attachment' ) {
+						continue;
+					}
+
 					ob_start();
 					$post_id = self::display_item( $post );
 					echo( ob_get_clean() );
