@@ -791,7 +791,7 @@ static function display_ignored( $post_ids ) {
 <?php
 			endforeach;
 
-			$comments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved <> 'spam'", $post->ID ) );
+			$comments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = 1 'spam'", $post->ID ) );
 			foreach ( $comments as $c ) : ?>
 			<wp:comment>
 				<wp:comment_id><?php echo $c->comment_ID; ?></wp:comment_id>
