@@ -39,6 +39,8 @@ return array
 				=> include 'settings/metakeys_ids'.EXT,
 				'metakeys_urls'
 				=> include 'settings/metakeys_urls'.EXT,
+				'customify_options'
+				=> include 'settings/customify_options'.EXT,
 			),
 
 		'processor' => array

@@ -62,7 +62,8 @@
 		echo $f->field('ignores')->render();
 		echo $f->field('featured_images')->render();
 		echo $f->field('metakeys_ids')->render();
-		echo $f->field('metakeys_urls')->render();
+//		echo $f->field('metakeys_urls')->render();
+		echo $f->field('customify_options')->render();
 
 //		DemoXmlPlugin::demo_export(
 //			array(
