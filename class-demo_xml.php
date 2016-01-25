@@ -498,7 +498,9 @@ static function display_header( $post_ids, $filename ) {
 		<wp:wxr_version><?php echo self::$wxr_version; ?></wp:wxr_version>
 		<wp:base_site_url><?php echo self::wxr_site_url(); ?></wp:base_site_url>
 		<wp:base_blog_url><?php bloginfo_rss( 'url' ); ?></wp:base_blog_url>
-<?php   self::wxr_authors_list( $post_ids );
+<?php
+// @TODO make a checkbox which will tell us to import authors
+//self::wxr_authors_list( $post_ids );
 }
 
 static function display_terms( $args ) {
@@ -670,7 +672,12 @@ static function display_ignored( $post_ids ) {
 				// Begin Loop.
 				foreach ( $posts as $post ) {
 
-					if ( get_post_type( $post ) === 'attachment' ) {
+					// @TOOD make a multi select with ignored post types
+					if ( get_post_type( $post ) === 'attachment' ||  get_post_type( $post ) === 'shop_order' ) {
+						continue;
+					}
+
+					if ( get_post_status( $post->ID ) !== 'publish' ) {
 						continue;
 					}
 
