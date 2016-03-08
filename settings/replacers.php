@@ -2,7 +2,8 @@
 
 return array(
 	'type' => 'postbox',
-	'label' => __('Replacers Settings', 'demo_xml_txtd'),
+	'label' => __('Replacers Images with', 'demo_xml_txtd'),
+	'class' => 'half-box',
 	'options' => array(
 		'demo_xml_replacers' => array (
 			'label' => __('Replacing images', 'demo_xml_txtd'),

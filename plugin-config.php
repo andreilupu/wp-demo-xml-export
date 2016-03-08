@@ -25,22 +25,17 @@ return array
 
 		'fields' => array
 			(
-				'hiddens'
-					=> include 'settings/hiddens'.EXT,
-				'general'
-				=> include 'settings/general'.EXT,
-				'replacers'
-					=> include 'settings/replacers'.EXT,
-				'ignores'
-					=> include 'settings/ignores'.EXT,
-				'featured_images'
-					=> include 'settings/featured_images'.EXT,
-				'metakeys_ids'
-				=> include 'settings/metakeys_ids'.EXT,
-				'metakeys_urls'
-				=> include 'settings/metakeys_urls'.EXT,
-				'customify_options'
-				=> include 'settings/customify_options'.EXT,
+				'hiddens'  => include 'settings/hiddens'.EXT,
+
+				'rest_export' => include 'settings/rest_export' . EXT,
+				'general' => include 'settings/general' . EXT,
+
+				'replacers'  => include 'settings/replacers'.EXT,
+				'ignores' => include 'settings/ignores'.EXT,
+				'featured_images'  => include 'settings/featured_images'.EXT,
+				'metakeys_ids' => include 'settings/metakeys_ids'.EXT,
+				'metakeys_urls' => include 'settings/metakeys_urls'.EXT,
+				'customify_options' => include 'settings/customify_options'.EXT,
 			),
 
 		'processor' => array

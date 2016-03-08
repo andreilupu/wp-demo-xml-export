@@ -7,9 +7,8 @@
 /* @var string $label */
 /* @var string $desc */
 /* @var string $rendering */
-
 ?>
-<div class="postbox">
+<div class="postbox <?php echo $class; ?>">
 	<div class="handlediv" title="Click to toggle"><br></div>
 	<h3 class="hndle"><span><?php echo $label ?></span></h3>
 

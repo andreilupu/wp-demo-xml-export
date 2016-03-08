@@ -8,6 +8,7 @@
 	# "Post Types" fields
 	'enable_demo_xml_gallery' => true,
 	'enable_selective_export' => false,
+	'enable_rest_export' => true,
 	'demo_xml_single_item_label' => __('Proof Gallery', 'demo_xml_txtd'),
 	'demo_xml_multiple_items_label' => __('Proof Galleries', 'demo_xml_txtd'),
 	'demo_xml_change_single_item_slug' => false,

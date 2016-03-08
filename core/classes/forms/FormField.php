@@ -94,8 +94,9 @@ class DemoXmlFormFieldImpl extends DemoXmlHTMLElementImpl implements DemoXmlForm
 		$label = $this->getmeta('label', null);
 		$default = $this->getmeta('default', null);
 		$desc = $this->getmeta('desc', '');
+		$class = $this->getmeta('class', '');
 		$rendering = $this->getmeta('rendering', 'standard');
-
+//		var_dump( $field );
 		// cleaned name (names may be "something[]")
 		$idname = preg_replace('/[^a-zA-Z0-9_-]/', '', $name);
 

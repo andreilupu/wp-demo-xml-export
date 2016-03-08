@@ -105,10 +105,6 @@ class DemoXmlPlugin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
-		// Load public-facing style sheet and JavaScript.
-//		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 99999999999 );
-//		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
 		add_filter( 'the_content_export', array( $this, 'replace_the_content_urls' ), 10, 1 );
 		add_filter( 'the_content_export', array( $this, 'replace_gallery_shortcodes_ids' ), 10, 1 );
 
@@ -120,6 +116,18 @@ class DemoXmlPlugin {
 		 * Ajax Callbacks
 		 */
 		add_action( 'wp_ajax_pix_core_gallery_preview', array( &$this, 'ajax_pix_core_gallery_preview' ) );
+
+		$this->register_export_api();
+	}
+
+
+	function register_export_api(){
+
+		include_once( self::get_base_path() . '/class-Customify_Exporter.php' );
+
+		$controller = new Customify_Exporter_Controller();
+
+		$controller->init();
 	}
 
 	function call_demo_export() {
