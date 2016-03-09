@@ -63,7 +63,7 @@ final class Customify_Exporter_Controller {
 			wp_send_json_error('no api here');
 		}
 
-		if ( isset( $settings['rest_types_export'] ) && ! empty( $settings['rest_types_export'] ) ) {
+		if ( isset( $settings['enable_rest_export_post_types'] ) && ! empty( $settings['enable_rest_export_post_types'] ) ) {
 			$post_types = $settings['rest_types_export'];
 
 			if ( ! empty( $post_types ) ) {
@@ -84,6 +84,9 @@ final class Customify_Exporter_Controller {
 							 *  @TODO export
 							 * 'comment_status'
 							 * (string) Whether the post can accept comments. Accepts 'open' or 'closed'. Default is the value of 'default_comment_status' option.
+							 *
+							 * Also export metadata
+							 *
 							 */
 						}
 					}
@@ -92,7 +95,7 @@ final class Customify_Exporter_Controller {
 		}
 
 
-		if ( isset( $settings['rest_taxes_export'] ) && ! empty( $settings['rest_taxes_export'] ) ) {
+		if ( isset( $settings['enable_rest_export_taxonomies'] ) && ! empty( $settings['enable_rest_export_taxonomies'] ) ) {
 			$taxonomies = $settings['rest_taxes_export'];
 
 			if ( ! empty( $taxonomies ) ) {
@@ -104,11 +107,23 @@ final class Customify_Exporter_Controller {
 
 						foreach ( $terms as $term ) {
 							$result['taxonomies'][$tax][$term->term_id] = $term;
+
+							/**
+							 *  @TODO export
+							 * Also export metadata
+							 *
+							 */
 						}
 					}
 				}
 			}
 		}
+
+		/**
+		 * @TODO Export wp_options
+		 */
+
+
 
 		wp_send_json_success( $result );
 
@@ -175,6 +190,13 @@ final class Customify_Exporter_Controller {
 					}
 				}
 			}
+		}
+
+		$result['wp_options'] = $settings['enable_rest_wp_options_export'];
+
+		if ( isset( $settings['enable_rest_wp_options_export'] ) && ! empty( $settings['enable_rest_wp_options_export'] ) ) {
+			$wp_options = $settings['select_wp_options_to_export'];
+			$result['wp_options'] = $wp_options;
 		}
 
 		wp_send_json_success( $result );

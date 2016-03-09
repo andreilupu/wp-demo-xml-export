@@ -59,9 +59,15 @@
 		echo $f->field('hiddens')->render();
 		echo $f->field('rest_export')->render();
 
-		echo '<div class="clear"></div>';
+		echo $f->field('post_metadata')->render();
 
 //		echo $f->field('general')->render();
+
+		echo '<div class="clear"></div>';
+		echo $f->field('wp_options')->render();
+
+		echo '<div class="clear"></div>';
+
 		echo $f->field('replacers')->render();
 		echo $f->field('ignores')->render();
 

@@ -28,6 +28,8 @@ return array
 				'hiddens'  => include 'settings/hiddens'.EXT,
 
 				'rest_export' => include 'settings/rest_export' . EXT,
+				'post_metadata' => include 'settings/post_metadata' . EXT,
+				'wp_options' => include 'settings/wp_options' . EXT,
 				'general' => include 'settings/general' . EXT,
 
 				'replacers'  => include 'settings/replacers'.EXT,
