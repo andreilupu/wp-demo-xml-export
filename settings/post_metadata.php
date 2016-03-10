@@ -14,9 +14,8 @@ return array(
 //		'post_types_group'         => array(
 //			'type'    => 'group',
 //			'options' => array(
-				'select_wp_options_to_export' => array(
+				'select_metadata_to_export' => array(
 					'label'       => __( 'Options', 'pixfields_txtd' ),
-//					'default'     => array( 'post' => 'on', 'page' => 'on' ),
 					'type'        => 'post_metadata_checkbox',
 					'description' => 'Which metadata be available on rest'
 				),

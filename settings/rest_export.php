@@ -24,10 +24,10 @@ return array(
 				'rest_types_group_post_types'         => array(
 					'type'    => 'group',
 					'options' => array(
-						'rest_taxes_export' => array(
+						'rest_types_export' => array(
 							'label'       => __( 'Taxonomies', 'pixfields_txtd' ),
-							'default'     => array( 'categories' => 'on' ),
-							'type'        => 'taxonomies_checkbox',
+							'default'     => array( 'post' => 'on', 'page' => 'on' ),
+							'type'        => 'post_types_checkbox',
 							'description' => 'Which post types should have export box'
 						),
 					)
