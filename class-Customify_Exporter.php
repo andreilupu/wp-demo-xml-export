@@ -127,7 +127,6 @@ final class Customify_Exporter_Controller {
 		 * @TODO Export wp_options
 		 */
 
-
 		wp_send_json_success( $result );
 
 		// look for this step
@@ -155,6 +154,27 @@ final class Customify_Exporter_Controller {
 			wp_send_json_error( 'no api here' );
 		}
 
+		if ( isset( $settings['rest_taxes_export'] ) && ! empty( $settings['rest_taxes_export'] ) ) {
+			$taxonomies = $settings['rest_taxes_export'];
+
+			if ( ! empty( $taxonomies ) ) {
+
+				foreach ( $taxonomies as $tax => $val ) {
+
+					if ( $val === 'on' ) {
+						$terms = get_terms( $tax );
+
+						$result['taxonomies'][ $tax ]['count'] = count( $terms );
+
+						$result['taxonomies'][ $tax ]['labels'] = get_taxonomy_labels( get_taxonomy( $tax ) );
+						foreach ( $terms as $term ) {
+							$result['taxonomies'][ $tax ]['results'][ $term->term_id ] = $term;
+						}
+					}
+				}
+			}
+		}
+
 		if ( isset( $settings['rest_types_export'] ) && ! empty( $settings['rest_types_export'] ) ) {
 			$post_types = $settings['rest_types_export'];
 
@@ -179,27 +199,6 @@ final class Customify_Exporter_Controller {
 							$the_query->the_post();
 							global $post;
 							$result['post_types'][ $post_type ]['results'][ $post->ID ] = $post;
-						}
-					}
-				}
-			}
-		}
-
-		if ( isset( $settings['rest_taxes_export'] ) && ! empty( $settings['rest_taxes_export'] ) ) {
-			$taxonomies = $settings['rest_taxes_export'];
-
-			if ( ! empty( $taxonomies ) ) {
-
-				foreach ( $taxonomies as $tax => $val ) {
-
-					if ( $val === 'on' ) {
-						$terms = get_terms( $tax );
-
-						$result['taxonomies'][ $tax ]['count'] = count( $terms );
-
-						$result['taxonomies'][ $tax ]['labels'] = get_taxonomy_labels( get_taxonomy( $tax ) );
-						foreach ( $terms as $term ) {
-							$result['taxonomies'][ $tax ]['results'][ $term->term_id ] = $term;
 						}
 					}
 				}
